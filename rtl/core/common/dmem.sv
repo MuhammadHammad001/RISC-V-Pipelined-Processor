@@ -11,6 +11,7 @@ module dmem(clk, rst_n, we, req_addr, wdata, rdata);
     // Reads are combinational.
     assign rdata = dmem[req_addr];
 
+    //TODO: add support for the load and store of a aligned byte, half-word, word
     // Writes are sequential.
     always_ff @(posedge clk) begin
         if (we) begin
