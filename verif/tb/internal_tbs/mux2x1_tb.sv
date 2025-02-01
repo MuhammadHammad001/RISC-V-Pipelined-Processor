@@ -1,9 +1,9 @@
 module mux2x1_tb ();
     //Declare signals
-    logic [31:0]    inp1,
-    logic [31:0]    inp2,
-    logic           sel ,
-    logic [31:0]    out
+    logic [31:0]    inp1;
+    logic [31:0]    inp2;
+    logic           sel ;
+    logic [31:0]    out ;
 
     //Instancing mux module here
     mux2x1 mux(
@@ -35,7 +35,7 @@ module mux2x1_tb ();
 
         $display("Output out = %d", out);
 
-        $stop
+        $finish;
     end
 
     //dump all the inputs and outputs to a waveform
