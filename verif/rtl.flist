@@ -1,3 +1,6 @@
 /home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/mux2x1.sv
 /home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/adder.sv
 /home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/imem.sv
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/ff.sv
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/pipeline/fetch.sv
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/pipeline/FetchDecodeStage.sv
