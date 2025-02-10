@@ -4,3 +4,10 @@
 /home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/ff.sv
 /home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/pipeline/fetch.sv
 /home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/pipeline/FetchDecodeStage.sv
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/controlunit.sv
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/register_file.sv
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/imm_gen.sv
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/pipeline/decode.sv
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/pipeline/DecodeExecuteStage.sv
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/ALU.sv
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/pipeline/execute.sv

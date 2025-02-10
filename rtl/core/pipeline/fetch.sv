@@ -1,7 +1,7 @@
-module fetch(clk, rst, PCSrcE, PCTargetE, PCF_curr, PCPlus4FD, InstrFD);
+module fetch(clk, rst_n, PCSrcE, PCTargetE, PCF_curr, PCPlus4FD, InstrFD);
     input  logic clk;
-    input  logic rst;
-    input  logic [31: 0] PCSrcE;
+    input  logic rst_n;
+    input  logic PCSrcE;
     input  logic [31: 0] PCTargetE;
     output logic [31: 0] PCF_curr;
     output logic [31: 0] PCPlus4FD;
@@ -21,14 +21,14 @@ module fetch(clk, rst, PCSrcE, PCTargetE, PCF_curr, PCPlus4FD, InstrFD);
     //PC flop instance
     ff PC_Flop(
         .clk(clk),
-        .rst(rst),
+        .rst_n(rst_n),
         .inp(PCF_next),
         .out(PCF_curr)
     );
 
     //instruction memory instance
     imem imem(
-        .rst(rst),
+        .rst_n(rst_n),
         .req_addr(PCF_curr),
         .out(InstrFD)
     );
