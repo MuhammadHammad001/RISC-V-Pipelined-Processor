@@ -1,21 +1,25 @@
-module dmem(clk, rst_n, we, req_addr, wdata, rdata);
-    input  logic         clk;
-    input  logic         rst_n;
-    input  logic         we;                //write enable
-    input  logic [31: 0] req_addr;          //address at which we want to write/read the data at/from
-    input  logic [31: 0] wdata;             //data to be written in the instruction memory
-    output logic [31: 0] rdata;             //data read from the memory
+module dmem(
+    input  logic         clk,
+    input  logic         rst_n,
+    input  logic         we,                // Write enable.
+    input  logic [31:0]  req_addr,          // 32-bit byte address.
+    input  logic [31:0]  wdata,             // Data to be written.
+    output logic [31:0]  rdata              // Data read.
+);
 
-    logic [31:0] dmem [1023:0] = '{default: 32'b0};     //assign initially zero.
+    // Declare a 1024-word memory (words are 32-bit wide).
+    // Note: Since we have 1024 words, the index is 10 bits wide.
+    logic [31:0] dmem [0:1023];
 
-    // Reads are combinational.
-    assign rdata = dmem[req_addr];
+    // Combinational read: extract the word using bits [11:2] of the byte address.
+    assign rdata = dmem[req_addr[11:2]];
 
-    //TODO: add support for the load and store of a aligned byte, half-word, word
-    // Writes are sequential.
-    always_ff @(posedge clk) begin
-        if (we) begin
-            dmem[req_addr] <= wdata;
+    // Sequential write: on a positive clock edge (with asynchronous active-low reset).
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+        end else if (we) begin
+            dmem[req_addr[11:2]] <= wdata;
         end
     end
+
 endmodule

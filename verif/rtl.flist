@@ -1,4 +1,5 @@
 /home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/mux2x1.sv
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/mux3x1.sv
 /home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/adder.sv
 /home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/imem.sv
 /home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/ff.sv
@@ -12,3 +13,7 @@
 /home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/ALU.sv
 /home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/pipeline/execute.sv
 /home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/pipeline/ExecuteMemoryStage.sv
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/pipeline/memory.sv
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/dmem.sv
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/pipeline/MemoryWriteBackStage.sv
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/pipeline/writeback.sv

@@ -4,7 +4,7 @@ module RegisterEM(clk, rst_n, RegWriteE_out, ResultSrcE_out, MemWriteE_out, ALUR
     input  logic         clk;
     input  logic         rst_n;
     input  logic [31: 0] RegWriteE_out;
-    input  logic [31: 0] ResultSrcE_out;
+    input  logic [1:  0] ResultSrcE_out;
     input  logic [31: 0] MemWriteE_out;
     input  logic [31: 0] ALUResultE;
     input  logic [31: 0] WriteDataE;
@@ -12,7 +12,7 @@ module RegisterEM(clk, rst_n, RegWriteE_out, ResultSrcE_out, MemWriteE_out, ALUR
     input  logic [31: 0] PCPlus4E_out;
 
     output logic [31: 0] RegWriteM;
-    output logic [31: 0] ResultSrcM;
+    output logic [1:  0] ResultSrcM;
     output logic [31: 0] MemWriteM;
     output logic [31: 0] ALUResultM;
     output logic [31: 0] WriteDataM;
