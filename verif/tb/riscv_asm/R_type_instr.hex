@@ -1,0 +1,53 @@
+00F00093
+00300113
+00000013
+00000013
+00000013
+00000013
+002081B3
+40208233
+002092B3
+0020A333
+0020B3B3
+0020C433
+0020D4B3
+4020D533
+0020E5B3
+0020F633
+
+
+#Remove this and the following lines before running the above code.
+#Following is assembly of the above code for the verification of R type instructions...
+#Working Fine :)
+   li x1, 0x0000000F  # 15
+   li x2, 0x00000003  # 3
+
+    # ADD: x3 = x1 + x2 (15 + 3 = 18)
+    add x3, x1, x2
+
+    # SUB: x4 = x1 - x2 (15 - 3 = 12)
+    sub x4, x1, x2
+
+    # SLL: x5 = x1 << x2 (15 << 3 = 120)
+    sll x5, x1, x2
+
+    # SLT: x6 = (x1 < x2) ? 1 : 0 (15 < 3 = 0)
+    slt x6, x1, x2
+
+    # SLTU: x7 = (x1 < x2) unsigned (15 < 3 = 0)
+    sltu x7, x1, x2
+
+    # XOR: x8 = x1 ^ x2 (15 ^ 3 = 12)
+    xor x8, x1, x2
+
+    # SRL: x9 = x1 >> x2 (15 >> 3 = 1)
+    srl x9, x1, x2
+
+    # SRA: x10 = x1 >> x2 (signed) (15 >> 3 = 1)
+    sra x10, x1, x2
+
+    # OR: x11 = x1 | x2 (15 | 3 = 15)
+    or x11, x1, x2
+
+    # AND: x12 = x1 & x2 (15 & 3 = 3)
+    and x12, x1, x2
