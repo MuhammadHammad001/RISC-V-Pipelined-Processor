@@ -129,6 +129,7 @@ module PipelinedProcessor(clk, rst_n);
         .rs1_data_E(rs1_dataE),
         .rs2_data_E(rs2_dataE),
         .PCE(PCE),
+        .PCSrcE(PCSrcE),
         .immExtE(immExtE),
         .PCPlus4E(PCPlus4E),
         .RdE(RdE),

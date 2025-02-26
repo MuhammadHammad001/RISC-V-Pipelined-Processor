@@ -32,7 +32,7 @@ module RegisterMW(clk, rst_n, RegWriteM, ResultSrcM, ALUResultM, RdataM, RdM, PC
             ResultSrcW <= ResultSrcM;
             ALUResultW <= ALUResultM;
             RdataW     <= RdataM;
-            RdW        <= RdataM;
+            RdW        <= RdM;
             PCPlus4W   <= PCPlus4M;
         end
     end

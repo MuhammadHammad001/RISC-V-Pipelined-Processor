@@ -1,5 +1,5 @@
 module execute (clk, rst_n, RegWriteE, ResultSrcE, MemWriteE, JumpE, BranchE, ALUControlE, ALUSrcAE, ALUSrcBE, rs1_data_E, rs2_data_E, PCE, immExtE, PCPlus4E, RdE,
-                 RegWriteE_out, ResultSrcE_out, MemWriteE_out, PCTargetE, ALUResultE, WriteDataE, RdE_out, PCPlus4E_out);
+                 PCSrcE, RegWriteE_out, ResultSrcE_out, MemWriteE_out, PCTargetE, ALUResultE, WriteDataE, RdE_out, PCPlus4E_out);
 
     input  logic         clk;
     input  logic         rst_n;
@@ -19,6 +19,7 @@ module execute (clk, rst_n, RegWriteE, ResultSrcE, MemWriteE, JumpE, BranchE, AL
     input  logic [31: 0] PCPlus4E;
     input  logic [4:0]   RdE;
 
+    output logic         PCSrcE;
     output logic         RegWriteE_out;
     output logic         MemWriteE_out;
     output logic [1:  0] ResultSrcE_out;
