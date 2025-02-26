@@ -3,15 +3,15 @@ module Memory(clk, rst_n, RegWriteM, ResultSrcM, MemWriteM, ALUResultM, WriteDat
 );
     input  logic         clk;
     input  logic         rst_n;
-    input  logic [31: 0] RegWriteM;
+    input  logic         RegWriteM;
     input  logic [1:  0] ResultSrcM;
-    input  logic [31: 0] MemWriteM;
+    input  logic         MemWriteM;
     input  logic [31: 0] ALUResultM;
     input  logic [31: 0] WriteDataM;
     input  logic [4:  0] RdM;
     input  logic [31: 0] PCPlus4M;
 
-    output logic [31: 0] RegWriteM_out;
+    output logic         RegWriteM_out;
     output logic [1:  0] ResultSrcM_out;
     output logic [31: 0] ALUResultM_out;
     output logic [31: 0] RdataM;
@@ -27,7 +27,7 @@ module Memory(clk, rst_n, RegWriteM, ResultSrcM, MemWriteM, ALUResultM, WriteDat
 
     dmem data_memory(
         .clk(clk),
-        .rst_n(clk),
+        .rst_n(rst_n),
         .we(MemWriteM),
         .req_addr(ALUResultM),
         .wdata(WriteDataM),

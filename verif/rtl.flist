@@ -17,3 +17,6 @@
 /home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/dmem.sv
 /home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/pipeline/MemoryWriteBackStage.sv
 /home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/pipeline/writeback.sv
+
+#TopModule.
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/core_top.sv

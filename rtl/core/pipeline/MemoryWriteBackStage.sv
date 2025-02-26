@@ -3,15 +3,15 @@ module RegisterMW(clk, rst_n, RegWriteM, ResultSrcM, ALUResultM, RdataM, RdM, PC
 );
     input  logic         clk;
     input  logic         rst_n;
-    input  logic [31: 0] RegWriteM;
-    input  logic [4:  0] ResultSrcM;
+    input  logic         RegWriteM;
+    input  logic [1:  0] ResultSrcM;
     input  logic [31: 0] ALUResultM;
     input  logic [31: 0] RdataM;
     input  logic [4:  0] RdM;
     input  logic [31: 0] PCPlus4M;
 
-    output logic [31: 0] RegWriteW;
-    output logic [31: 0] ResultSrcW;
+    output logic         RegWriteW;
+    output logic [1: 0] ResultSrcW;
     output logic [31: 0] ALUResultW;
     output logic [31: 0] RdataW;
     output logic [4:  0] RdW;
@@ -20,8 +20,8 @@ module RegisterMW(clk, rst_n, RegWriteM, ResultSrcM, ALUResultM, RdataM, RdM, PC
 
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            RegWriteW  <= 32'h0;
-            ResultSrcW <= 32'h0;
+            RegWriteW  <= 1'h0;
+            ResultSrcW <= 2'h0;
             ALUResultW <= 32'h0;
             RdataW     <= 32'h0;
             RdW        <= 32'h0;

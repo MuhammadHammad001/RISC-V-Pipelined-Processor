@@ -18,6 +18,7 @@ module alu (
     parameter [3:0] OR   = 4'b1000;
     parameter [3:0] AND  = 4'b1001;
     parameter [3:0] LUI  = 4'b1010;
+    parameter [3:0] JAL  = 4'b1011;
 
     always_comb begin
         case (ALUControl)
@@ -32,6 +33,7 @@ module alu (
             OR:   ALUResult = srcA | srcB;                                    // Bitwise OR
             AND:  ALUResult = srcA & srcB;                                    // Bitwise AND
             LUI:  ALUResult = {srcB[31:12], 12'b0};                           // Load Upper Immediate: shift immediate left 12 bits
+            JAL:  ALUResult = srcA + 32'd4;                                    // Jal (Jump and Link instruction) (PC + 4)
             default: ALUResult = 32'd0;                                        // Default case
         endcase
     end

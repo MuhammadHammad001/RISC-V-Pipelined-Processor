@@ -3,17 +3,17 @@ module RegisterEM(clk, rst_n, RegWriteE_out, ResultSrcE_out, MemWriteE_out, ALUR
 );
     input  logic         clk;
     input  logic         rst_n;
-    input  logic [31: 0] RegWriteE_out;
+    input  logic         RegWriteE_out;
     input  logic [1:  0] ResultSrcE_out;
-    input  logic [31: 0] MemWriteE_out;
+    input  logic         MemWriteE_out;
     input  logic [31: 0] ALUResultE;
     input  logic [31: 0] WriteDataE;
     input  logic [4:0]   RdE_out;
     input  logic [31: 0] PCPlus4E_out;
 
-    output logic [31: 0] RegWriteM;
+    output logic         RegWriteM;
     output logic [1:  0] ResultSrcM;
-    output logic [31: 0] MemWriteM;
+    output logic         MemWriteM;
     output logic [31: 0] ALUResultM;
     output logic [31: 0] WriteDataM;
     output logic [4:0]   RdM;
@@ -22,9 +22,9 @@ module RegisterEM(clk, rst_n, RegWriteE_out, ResultSrcE_out, MemWriteE_out, ALUR
     //asynch. reset (active low)
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            RegWriteM  <= 32'h0;
+            RegWriteM  <= 1'h0;
             ResultSrcM <= 32'h0;
-            MemWriteM  <= 32'h0;
+            MemWriteM  <= 1'h0;
             ALUResultM <= 32'h0;
             WriteDataM <= 32'h0;
             RdM        <= 5'h0;

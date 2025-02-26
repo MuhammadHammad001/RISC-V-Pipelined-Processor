@@ -1,12 +1,14 @@
-module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALUControlD, ALUSrcD, ImmSrcD);
+module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALUControlD, ALUSrcAD, ALUSrcBD, ImmSrcD);
     input  logic [31:0] InstrD;
     output logic        RegWriteD;
+    // output logic        fp_RegWriteD;                   //floating-point regfile write enable.
     output logic [1:0]  ResultSrcD;
     output logic        MemWriteD;
     output logic        JumpD;
     output logic        BranchD;
     output logic [3:0]  ALUControlD;
-    output logic        ALUSrcD;
+    output logic        ALUSrcAD;
+    output logic        ALUSrcBD;
     output logic [2:0]  ImmSrcD;
 
     //Opcodes for Integer-type instructions
@@ -21,6 +23,7 @@ module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALU
     parameter [3:0] OR   = 4'b1000;
     parameter [3:0] AND  = 4'b1001;
     parameter [3:0] LUI  = 4'b1010;
+    parameter [3:0] JAL  = 4'b1011;
 
     //TODO: Add the opcodes for floating point here.
 
@@ -41,7 +44,8 @@ module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALU
         JumpD       = 1'b0;
         BranchD     = 1'b0;
         ALUControlD = 3'b000;
-        ALUSrcD     = 1'b0;
+        ALUSrcAD     = 1'b0;
+        ALUSrcBD     = 1'b0;
         ImmSrcD     = 3'b000;
         case (opcode)
             7'b0110011 : begin            //R-type instruction.
@@ -50,7 +54,8 @@ module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALU
                 MemWriteD   = 1'b0  ;               //No write to Data Mem.
                 JumpD       = 1'b0  ;               //No jump
                 BranchD     = 1'b0  ;               //No Branch
-                ALUSrcD     = 1'b0  ;               //ALU src is not immediate.
+                ALUSrcAD    = 1'b0  ;               //ALU src is rs1
+                ALUSrcBD    = 1'b0  ;               //ALU src is not immediate.
                 ImmSrcD     = 3'bxxx;               //ImmSrc is don't care.
                 case (func7)
                     7'b0000000 : begin
@@ -80,7 +85,8 @@ module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALU
                 MemWriteD   = 1'b0  ;               //No write to Data Mem.
                 JumpD       = 1'b0  ;               //No jump
                 BranchD     = 1'b0  ;               //No Branch
-                ALUSrcD     = 1'b1  ;               //ALU src is immediate.
+                ALUSrcAD    = 1'b0  ;               //ALU src is rs1
+                ALUSrcBD    = 1'b1  ;               //ALU src is immediate.
                 ImmSrcD     = 3'b000;               //ImmSrc is I type.
                 case (func3)
                     3'b000 : ALUControlD = ADD ;
@@ -105,7 +111,8 @@ module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALU
                 MemWriteD   = 1'b0  ;               //No write to Data Mem.
                 JumpD       = 1'b0  ;               //No jump
                 BranchD     = 1'b0  ;               //No Branch
-                ALUSrcD     = 1'b1  ;               //ALU src is immediate.
+                ALUSrcAD    = 1'b0  ;               //ALU src is rs1
+                ALUSrcBD    = 1'b1  ;               //ALU src is immediate.
                 ImmSrcD     = 3'b000;               //ImmSrc is I type.
                 ALUControlD = ADD   ;
             end
@@ -116,7 +123,8 @@ module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALU
                 MemWriteD   = 1'b1  ;               //write to Data Mem.
                 JumpD       = 1'b0  ;               //No jump
                 BranchD     = 1'b0  ;               //No Branch
-                ALUSrcD     = 1'b1  ;               //ALU src is immediate.
+                ALUSrcAD    = 1'b0  ;               //ALU src is rs1
+                ALUSrcBD    = 1'b1  ;               //ALU src is immediate.
                 ImmSrcD     = 3'b001;               //ImmSrc is S type.
                 ALUControlD = ADD   ;
             end
@@ -127,7 +135,8 @@ module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALU
                 MemWriteD   = 1'b0  ;               //No write to Data Mem.
                 JumpD       = 1'b0  ;               //No jump
                 BranchD     = 1'b0  ;               //No Branch
-                ALUSrcD     = 1'bx  ;               //ALU src is immediate.
+                ALUSrcAD    = 1'b1  ;               //ALU src is PC.
+                ALUSrcBD    = 1'b1  ;               //ALU src is immediate.
                 ImmSrcD     = 3'b100;               //ImmSrc is U type.
                 ALUControlD = ADD ;
             end
@@ -138,7 +147,8 @@ module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALU
                 MemWriteD   = 1'b0  ;               //No write to Data Mem.
                 JumpD       = 1'b0  ;               //No jump
                 BranchD     = 1'b0  ;               //No Branch
-                ALUSrcD     = 1'b1  ;               //ALU src is immediate.
+                ALUSrcAD    = 1'bx  ;               //ALU src is don't care.
+                ALUSrcBD    = 1'b1  ;               //ALU src is immediate.
                 ImmSrcD     = 3'b100;               //ImmSrc is U type.
                 ALUControlD = LUI ;
             end
@@ -149,7 +159,8 @@ module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALU
                 MemWriteD   = 1'b0  ;               //No write to Data Mem.
                 JumpD       = 1'b0  ;               //No jump
                 BranchD     = 1'b1  ;               //Branch
-                ALUSrcD     = 1'b0  ;               //ALU src is not immediate.
+                ALUSrcAD    = 1'b0  ;               //ALU src is rs1
+                ALUSrcBD    = 1'b0  ;               //ALU src is rs2.
                 ImmSrcD     = 3'b010;               //ImmSrc is B type.
                 ALUControlD = SUB ;
             end
@@ -160,22 +171,14 @@ module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALU
                 MemWriteD   = 1'b0  ;               //No write to Data Mem.
                 JumpD       = 1'b1  ;               //Jump
                 BranchD     = 1'b0  ;               //No Branch
-                ALUSrcD     = 1'b1  ;               //ALU src is immediate.
+                ALUSrcAD    = 1'b1  ;               //ALU src is pc
+                ALUSrcBD    = 1'bx  ;               //ALU src is don't care.
                 ImmSrcD     = 3'b011;               //ImmSrc is J type.
-                ALUControlD = ADD ;
-            end
-
-            7'b1100111 : begin              //I-type instruction -- JALR
-                RegWriteD   = 1'b1  ;               //write to the register file
-                ResultSrcD  = 2'b10 ;               //result source = PC + 4.
-                MemWriteD   = 1'b0  ;               //No write to Data Mem.
-                JumpD       = 1'b1  ;               //Jump
-                BranchD     = 1'b0  ;               //No Branch
-                ALUSrcD     = 1'b1  ;               //ALU src is immediate.
-                ImmSrcD     = 3'b000;               //ImmSrc is I type.
-                ALUControlD = ADD ;
+                ALUControlD = JAL ;
             end
 
     endcase
     end
 endmodule
+
+//NOTES: JALR is not supported.
