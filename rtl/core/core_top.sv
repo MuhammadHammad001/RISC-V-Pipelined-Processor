@@ -9,16 +9,17 @@ module PipelinedProcessor(clk, rst_n);
     logic         RegWriteD, MemWriteD, JumpD, BranchD, ALUSrcAD, ALUSrcBD;     //Decode Stage Signals.
     logic [ 1: 0] ResultSrcD;                                                   //Decode Stage Signals.
     logic [ 3: 0] ALUControlD;                                                  //Decode Stage Signals.
-    logic [ 4: 0] RdD;                                                          //Decode Stage Signals.
+    logic [ 4: 0] rs1_regD, rs2_regD, RdD;                                      //Decode Stage Signals.
     logic         RegWriteE, MemWriteE, JumpE, BranchE, ALUSrcAE, ALUSrcBE;     //Decode-Execute Stage Signals.
     logic [31: 0] rs1_dataE, rs2_dataE, PCE, immExtE, PCPlus4E;                 //Decode-Execute Stage Signals.
     logic [ 1: 0] ResultSrcE;                                                   //Decode-Execute Stage Signals.
     logic [ 3: 0] ALUControlE;                                                  //Decode-Execute Stage Signals.
-    logic [ 4: 0] RdE;                                                          //Decode-Execute Stage Signals.
+    logic [ 4: 0] rs1_regE, rs2_regE, RdE;                                      //Decode-Execute Stage Signals.
     logic         RegWriteE_out, MemWriteEout;                                  //Execute Stage Signals.
     logic [ 1: 0] ResultSrcE_out;                                               //Execute Stage Signals.
     logic [31: 0] ALUResultE, WriteDataE, PCPlus4E_out;                         //Execute Stage Signals.
     logic [ 4: 0] RdE_out;                                                      //Execute Stage Signals.
+    logic [31: 0] ForwardMuxA_out, ForwardMuxB_out;                             //Execute Stage Signals.
     logic         RegWriteM, MemWriteM;                                         //Execute-Memory Stage Signals.
     logic [ 1: 0] ResultSrcM;                                                   //Execute-Memory Stage Signals.
     logic [31: 0] ALUResultM, WriteDataM, PCPlus4M;                             //Execute-Memory Stage Signals.
@@ -34,7 +35,7 @@ module PipelinedProcessor(clk, rst_n);
     logic [31: 0] ResultW;                                                      //WriteBack Stage Signals.
     logic [ 4: 0] RdW_out;                                                      //WriteBack Stage Signals.
     logic         RegWriteW_out;                                                //WriteBack Stage Signals.
-
+    logic [ 1: 0] ForwardAE, ForwardBE;                                         //Forwarding Signals.
 
     fetch FetchStage(
         .clk(clk),
@@ -74,6 +75,8 @@ module PipelinedProcessor(clk, rst_n);
         .ALUControlD(ALUControlD),
         .ALUSrcAD(ALUSrcAD),
         .ALUSrcBD(ALUSrcBD),
+        .rs1_regD(rs1_regD),
+        .rs2_regD(rs2_regD),
         .rs1_data(rs1_dataD),
         .rs2_data(rs2_dataD),
         .PCD_out(PCD_out),
@@ -98,6 +101,8 @@ module PipelinedProcessor(clk, rst_n);
         .PCD_out(PCD_out),
         .immExtD(immExtD),
         .PCPlus4D_out(PCPlus4D_out),
+        .rs1_regD(rs1_regD),
+        .rs2_regD(rs2_regD),
         .RdD(RdD),
         .RegWriteE(RegWriteE),
         .ResultSrcE(ResultSrcE),
@@ -112,6 +117,8 @@ module PipelinedProcessor(clk, rst_n);
         .PCE(PCE),
         .immExtE(immExtE),
         .PCPlus4E(PCPlus4E),
+        .rs1_regE(rs1_regE),
+        .rs2_regE(rs2_regE),
         .RdE(RdE)
     );
 
@@ -126,8 +133,8 @@ module PipelinedProcessor(clk, rst_n);
         .ALUControlE(ALUControlE),
         .ALUSrcAE(ALUSrcAE),
         .ALUSrcBE(ALUSrcBE),
-        .rs1_data_E(rs1_dataE),
-        .rs2_data_E(rs2_dataE),
+        .rs1_data_E(ForwardMuxA_out),
+        .rs2_data_E(ForwardMuxB_out),
         .PCE(PCE),
         .PCSrcE(PCSrcE),
         .immExtE(immExtE),
@@ -207,6 +214,33 @@ module PipelinedProcessor(clk, rst_n);
         .RdW_out(RdW_out),
         .RegWriteW_out(RegWriteW_out),
         .ResultW(ResultW)
+    );
+
+    mux3x1 ForwardMuxA(
+        .inp1(rs1_dataE),
+        .inp2(ALUResultM),
+        .inp3(ResultW),
+        .sel(ForwardAE),
+        .out(ForwardMuxA_out)
+    );
+
+    mux3x1 ForwardMuxB(
+        .inp1(rs2_dataE),
+        .inp2(ALUResultM),
+        .inp3(ResultW),
+        .sel(ForwardBE),
+        .out(ForwardMuxB_out)
+    );
+
+    HazardUnit HazardUnit(
+        .rs1E(rs1_regE),
+        .rs2E(rs2_regE),
+        .rdM(RdM),
+        .rdW(RdW),
+        .RegWriteM(RegWriteM_out),
+        .RegWriteW(RegWriteW_out),
+        .ForwardAE(ForwardAE),
+        .ForwardBE(ForwardBE)
     );
 
 endmodule

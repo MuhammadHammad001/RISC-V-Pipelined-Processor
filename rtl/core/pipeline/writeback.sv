@@ -17,7 +17,7 @@ module Writeback(RegWriteW, ResultSrcW, ALUResultW, RdataW, RdW, PCPlus4W,
     assign RegWriteW_out = RegWriteW;
     assign RdW_out       = RdW;
 
-    mux4x1 muxWB(
+    mux3x1 muxWB(
         .inp1(ALUResultW),
         .inp2(RdataW),
         .inp3(PCPlus4W),

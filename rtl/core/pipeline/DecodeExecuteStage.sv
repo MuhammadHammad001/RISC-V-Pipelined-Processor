@@ -1,5 +1,5 @@
-module RegisterDE(clk, rst_n, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALUControlD, ALUSrcAD, ALUSrcBD, rs1_data, rs2_data, PCD_out, immExtD, PCPlus4D_out, RdD,
-                  RegWriteE, ResultSrcE, MemWriteE, JumpE, BranchE, ALUControlE, ALUSrcAE, ALUSrcBE, rs1_data_E, rs2_data_E, PCE, immExtE, PCPlus4E, RdE
+module RegisterDE(clk, rst_n, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALUControlD, ALUSrcAD, ALUSrcBD, rs1_regD, rs2_regD, rs1_data, rs2_data, PCD_out, immExtD, PCPlus4D_out, RdD,
+                rs1_regE, rs2_regE, RegWriteE, ResultSrcE, MemWriteE, JumpE, BranchE, ALUControlE, ALUSrcAE, ALUSrcBE, rs1_data_E, rs2_data_E, PCE, immExtE, PCPlus4E, RdE
 );
     input  logic         clk;
     input  logic         rst_n;
@@ -11,13 +11,17 @@ module RegisterDE(clk, rst_n, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, 
     input  logic [3:0]   ALUControlD;
     input  logic         ALUSrcAD;
     input  logic         ALUSrcBD;
+    input  logic [ 4: 0] rs1_regD;
+    input  logic [ 4: 0] rs2_regD;
     input  logic [31: 0] rs1_data;
     input  logic [31: 0] rs2_data;
     input  logic [31: 0] PCD_out;
     input  logic [31: 0] immExtD;
     input  logic [31: 0] PCPlus4D_out;
-    input  logic [4:0]   RdD;
+    input  logic [ 4:0]  RdD;
 
+    output logic [ 4: 0] rs1_regE;
+    output logic [ 4: 0] rs2_regE;
     output logic         RegWriteE;
     output logic [1:0]   ResultSrcE;
     output logic         MemWriteE;
@@ -49,6 +53,8 @@ module RegisterDE(clk, rst_n, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, 
             PCE         <= 32'h0;
             immExtE     <= 32'h0;
             PCPlus4E    <= 32'h0;
+            rs1_regE    <= 5'h0;
+            rs2_regE    <= 5'h0;
             RdE         <= 5'h0;
         end
         else begin
@@ -65,6 +71,8 @@ module RegisterDE(clk, rst_n, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, 
             PCE         <= PCD_out;
             immExtE     <= immExtD;
             PCPlus4E    <= PCPlus4D_out;
+            rs1_regE    <= rs1_regD;
+            rs2_regE    <= rs2_regD;
             RdE         <= RdD;
         end
     end

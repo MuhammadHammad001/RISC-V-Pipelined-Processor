@@ -1,4 +1,4 @@
-module decode(clk, rst_n, InstrD, PCD, PCPlus4D, rd_wdata, reg_we, RdW, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALUControlD, ALUSrcAD, ALUSrcBD, rs1_data, rs2_data, PCD_out, immExtD, PCPlus4D_out, RdD);
+module decode(clk, rst_n, InstrD, PCD, PCPlus4D, rd_wdata, reg_we, RdW, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALUControlD, ALUSrcAD, ALUSrcBD, rs1_regD, rs2_regD, rs1_data, rs2_data, PCD_out, immExtD, PCPlus4D_out, RdD);
     input  logic         clk;
     input  logic         rst_n;
     input  logic [31: 0] InstrD ;
@@ -15,6 +15,8 @@ module decode(clk, rst_n, InstrD, PCD, PCPlus4D, rd_wdata, reg_we, RdW, RegWrite
     output logic [3:0]   ALUControlD;
     output logic         ALUSrcAD;
     output logic         ALUSrcBD;
+    output logic [ 4: 0] rs1_regD;
+    output logic [ 4: 0] rs2_regD;
     output logic [31: 0] rs1_data;
     output logic [31: 0] rs2_data;
     output logic [31: 0] PCD_out;
@@ -27,8 +29,10 @@ module decode(clk, rst_n, InstrD, PCD, PCPlus4D, rd_wdata, reg_we, RdW, RegWrite
     logic [4:0]  rs2_reg;
     logic [2:0]  ImmSrcD;
 
-    assign rs1_reg = InstrD [19:15];
-    assign rs2_reg = InstrD [24:20];
+    assign rs1_reg  = InstrD [19:15];
+    assign rs2_reg  = InstrD [24:20];
+    assign rs1_regD = InstrD [19:15];
+    assign rs2_regD = InstrD [24:20];
 
     //Rd assignment
     assign RdD = InstrD [11:7];
