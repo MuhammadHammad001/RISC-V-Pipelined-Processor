@@ -20,3 +20,6 @@
 
 #TopModule.
 /home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/core_top.sv
+
+#HazardUnit
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/HazardUnit.sv
