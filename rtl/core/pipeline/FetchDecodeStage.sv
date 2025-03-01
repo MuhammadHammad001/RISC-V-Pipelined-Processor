@@ -1,7 +1,8 @@
-module RegisterFD(clk, rst_n, StallD, InstrFD, PCF_curr, PCPlus4FD, InstrD, PCD, PCPlus4D);
+module RegisterFD(clk, rst_n, StallD, FlushD, InstrFD, PCF_curr, PCPlus4FD, InstrD, PCD, PCPlus4D);
     input   logic         clk;
     input   logic         rst_n;
     input   logic         StallD;
+    input   logic         FlushD;
     input   logic [31: 0] InstrFD;
     input   logic [31: 0] PCF_curr;
     input   logic [31: 0] PCPlus4FD;
@@ -20,6 +21,11 @@ module RegisterFD(clk, rst_n, StallD, InstrFD, PCF_curr, PCPlus4FD, InstrD, PCD,
             InstrD   <= InstrD  ;
             PCD      <= PCD     ;
             PCPlus4D <= PCPlus4D;
+        end
+        else if (FlushD) begin
+            InstrD   <= 32'h13  ;
+            PCD      <= 32'h0   ;
+            PCPlus4D <= 32'h0   ;
         end
         else begin
             InstrD   <= InstrFD;

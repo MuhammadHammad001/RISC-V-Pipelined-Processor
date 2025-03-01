@@ -36,7 +36,7 @@ module PipelinedProcessor(clk, rst_n);
     logic [ 4: 0] RdW_out;                                                      //WriteBack Stage Signals.
     logic         RegWriteW_out;                                                //WriteBack Stage Signals.
     logic [ 1: 0] ForwardAE, ForwardBE;                                         //Forwarding Signals.
-    logic         StallF, StallD, FlushE;                                       //Stall, Flush Signals.
+    logic         StallF, StallD, FlushD, FlushE;                               //Stall, Flush Signals.
 
     fetch FetchStage(
         .clk(clk),
@@ -53,6 +53,7 @@ module PipelinedProcessor(clk, rst_n);
         .clk(clk),
         .rst_n(rst_n),
         .StallD(StallD),
+        .FlushD(FlushD),
         .InstrFD(InstrFD),
         .PCF_curr(PCF_curr),
         .PCPlus4FD(PCPlus4FD),
@@ -247,10 +248,13 @@ module PipelinedProcessor(clk, rst_n);
         .Rs1D(rs1_regD),
         .Rs2D(rs2_regD),
         .RdE(RdE),
+        .PCSrcE(PCSrcE),
+        .JumpD(JumpD),
         .ForwardAE(ForwardAE),
         .ForwardBE(ForwardBE),
         .StallF(StallF),
         .StallD(StallD),
+        .FlushD(FlushD),
         .FlushE(FlushE)
     );
 

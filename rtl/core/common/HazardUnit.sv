@@ -1,19 +1,23 @@
-module HazardUnit( rs1E, rs2E, rdM, rdW, RegWriteM, RegWriteW, ResultSrcE, Rs1D, Rs2D, RdE,
-                    ForwardAE, ForwardBE, StallF, StallD, FlushE);
+module HazardUnit( rs1E, rs2E, rdM, rdW, RegWriteM, RegWriteW, ResultSrcE, Rs1D, Rs2D, RdE, PCSrcE, JumpD,
+                    ForwardAE, ForwardBE, StallF, StallD, FlushD, FlushE);
 
-    //Stall logic signals.
+    //Forwarding logic signals.
     input  logic [ 4: 0] rs1E, rs2E;
     input  logic [ 4: 0] rdM, rdW;
     input  logic         RegWriteM, RegWriteW;
     output logic [ 1: 0] ForwardAE, ForwardBE;
 
-    //Flush logic signals.
+    //Stall and Flush logic signals for loads.
     input  logic [ 1: 0] ResultSrcE;
     input  logic [ 4: 0] Rs1D, Rs2D, RdE;
     output logic StallF, StallD, FlushE;
 
+    //Flush logic signals for Control Instructions.
+    input  logic PCSrcE;
+    output logic FlushD;
+    input  logic JumpD;
 
-    //Stall Logic.
+    //Forwarding Logic.
     always_comb begin
         if (((rs1E == rdM) && RegWriteM) && (rs1E != 0)) begin
             ForwardAE = 2'b01;
@@ -38,17 +42,31 @@ module HazardUnit( rs1E, rs2E, rdM, rdW, RegWriteM, RegWriteW, ResultSrcE, Rs1D,
         end
     end
 
-
+    //Stall and Flush Logic for Load and Control instructions.
     always_comb begin
-        if ((ResultSrcE) && ((Rs1D == RdE) | (Rs2D == RdE))) begin
-            StallD = 1;
-            StallF = 1;
+        if (PCSrcE) begin
             FlushE = 1;
         end
         else begin
-            StallD = 0;
-            StallF = 0;
-            FlushE = 0;
+            if (((ResultSrcE) && ((Rs1D == RdE) | (Rs2D == RdE)))) begin
+                StallD = 1;
+                StallF = 1;
+                FlushE = 1;
+            end
+            else begin
+                StallD = 0;
+                StallF = 0;
+                FlushE = 0;
+            end
+        end
+    end
+
+    always_comb begin
+        if (PCSrcE | JumpD) begin
+            FlushD = 1;
+        end
+        else begin
+            FlushD = 0;
         end
     end
 
