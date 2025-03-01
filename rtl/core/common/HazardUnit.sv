@@ -1,5 +1,6 @@
-module HazardUnit( rs1E, rs2E, rdM, rdW, RegWriteM, RegWriteW,
-                    ForwardAE, ForwardBE);
+module HazardUnit( rs1E, rs2E, rdM, rdW, RegWriteM, RegWriteW, ResultSrcE, Rs1D, Rs2D, RdE,
+                    ForwardAE, ForwardBE, StallF, StallD, FlushE);
+
     //Stall logic signals.
     input  logic [ 4: 0] rs1E, rs2E;
     input  logic [ 4: 0] rdM, rdW;
@@ -7,7 +8,9 @@ module HazardUnit( rs1E, rs2E, rdM, rdW, RegWriteM, RegWriteW,
     output logic [ 1: 0] ForwardAE, ForwardBE;
 
     //Flush logic signals.
-
+    input  logic [ 1: 0] ResultSrcE;
+    input  logic [ 4: 0] Rs1D, Rs2D, RdE;
+    output logic StallF, StallD, FlushE;
 
 
     //Stall Logic.
@@ -35,5 +38,18 @@ module HazardUnit( rs1E, rs2E, rdM, rdW, RegWriteM, RegWriteW,
         end
     end
 
+
+    always_comb begin
+        if ((ResultSrcE) && ((Rs1D == RdE) | (Rs2D == RdE))) begin
+            StallD = 1;
+            StallF = 1;
+            FlushE = 1;
+        end
+        else begin
+            StallD = 0;
+            StallF = 0;
+            FlushE = 0;
+        end
+    end
 
 endmodule

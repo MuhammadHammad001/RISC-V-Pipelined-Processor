@@ -36,10 +36,12 @@ module PipelinedProcessor(clk, rst_n);
     logic [ 4: 0] RdW_out;                                                      //WriteBack Stage Signals.
     logic         RegWriteW_out;                                                //WriteBack Stage Signals.
     logic [ 1: 0] ForwardAE, ForwardBE;                                         //Forwarding Signals.
+    logic         StallF, StallD, FlushE;                                       //Stall, Flush Signals.
 
     fetch FetchStage(
         .clk(clk),
         .rst_n(rst_n),
+        .StallF(StallF),
         .PCSrcE(PCSrcE),                //output of Execute Stage
         .PCTargetE(PCTargetE),
         .PCF_curr(PCF_curr),
@@ -50,6 +52,7 @@ module PipelinedProcessor(clk, rst_n);
     RegisterFD FetchDecodeStage(
         .clk(clk),
         .rst_n(rst_n),
+        .StallD(StallD),
         .InstrFD(InstrFD),
         .PCF_curr(PCF_curr),
         .PCPlus4FD(PCPlus4FD),
@@ -88,6 +91,7 @@ module PipelinedProcessor(clk, rst_n);
     RegisterDE  DecodeExecuteStage(
         .clk(clk),
         .rst_n(rst_n),
+        .FlushE(FlushE),
         .RegWriteD(RegWriteD),
         .ResultSrcD(ResultSrcD),
         .MemWriteD(MemWriteD),
@@ -239,8 +243,15 @@ module PipelinedProcessor(clk, rst_n);
         .rdW(RdW),
         .RegWriteM(RegWriteM_out),
         .RegWriteW(RegWriteW_out),
+        .ResultSrcE(ResultSrcE),
+        .Rs1D(rs1_regD),
+        .Rs2D(rs2_regD),
+        .RdE(RdE),
         .ForwardAE(ForwardAE),
-        .ForwardBE(ForwardBE)
+        .ForwardBE(ForwardBE),
+        .StallF(StallF),
+        .StallD(StallD),
+        .FlushE(FlushE)
     );
 
 endmodule

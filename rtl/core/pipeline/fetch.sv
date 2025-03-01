@@ -1,6 +1,7 @@
-module fetch(clk, rst_n, PCSrcE, PCTargetE, PCF_curr, PCPlus4FD, InstrFD);
+module fetch(clk, rst_n, StallF, PCSrcE, PCTargetE, PCF_curr, PCPlus4FD, InstrFD);
     input  logic clk;
     input  logic rst_n;
+    input  logic StallF;
     input  logic PCSrcE;
     input  logic [31: 0] PCTargetE;
     output logic [31: 0] PCF_curr;
@@ -22,6 +23,7 @@ module fetch(clk, rst_n, PCSrcE, PCTargetE, PCF_curr, PCPlus4FD, InstrFD);
     ff PC_Flop(
         .clk(clk),
         .rst_n(rst_n),
+        .Stall(StallF),
         .inp(PCF_next),
         .out(PCF_curr)
     );

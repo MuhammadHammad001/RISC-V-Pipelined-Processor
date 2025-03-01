@@ -1,8 +1,9 @@
-module RegisterDE(clk, rst_n, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALUControlD, ALUSrcAD, ALUSrcBD, rs1_regD, rs2_regD, rs1_data, rs2_data, PCD_out, immExtD, PCPlus4D_out, RdD,
+module RegisterDE(clk, rst_n, FlushE, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALUControlD, ALUSrcAD, ALUSrcBD, rs1_regD, rs2_regD, rs1_data, rs2_data, PCD_out, immExtD, PCPlus4D_out, RdD,
                 rs1_regE, rs2_regE, RegWriteE, ResultSrcE, MemWriteE, JumpE, BranchE, ALUControlE, ALUSrcAE, ALUSrcBE, rs1_data_E, rs2_data_E, PCE, immExtE, PCPlus4E, RdE
 );
     input  logic         clk;
     input  logic         rst_n;
+    input  logic         FlushE;
     input  logic         RegWriteD;
     input  logic [1:0]   ResultSrcD;
     input  logic         MemWriteD;
@@ -40,6 +41,24 @@ module RegisterDE(clk, rst_n, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, 
     //asynch. reset (active low)
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
+            RegWriteE   <= 1'b0;
+            ResultSrcE  <= 2'b0;
+            MemWriteE   <= 1'b0;
+            JumpE       <= 1'b0;
+            BranchE     <= 1'b0;
+            ALUControlE <= 3'b0;
+            ALUSrcAE    <= 1'b0;
+            ALUSrcBE    <= 1'b0;
+            rs1_data_E  <= 32'h0;
+            rs2_data_E  <= 32'h0;
+            PCE         <= 32'h0;
+            immExtE     <= 32'h0;
+            PCPlus4E    <= 32'h0;
+            rs1_regE    <= 5'h0;
+            rs2_regE    <= 5'h0;
+            RdE         <= 5'h0;
+        end
+        else if (FlushE) begin
             RegWriteE   <= 1'b0;
             ResultSrcE  <= 2'b0;
             MemWriteE   <= 1'b0;
