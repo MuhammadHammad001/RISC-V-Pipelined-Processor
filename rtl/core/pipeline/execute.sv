@@ -42,6 +42,7 @@ module execute (clk, rst_n, RegWriteE, ResultSrcE, MemWriteE, JumpE, BranchE, AL
     assign MemWriteE_out  = MemWriteE;
     assign RdE_out        = RdE;
     assign PCPlus4E_out   = PCPlus4E;
+    assign WriteDataE     = rs2_data_E;
 
     mux2x1 ALU_inp1_mux(
         .inp1(rs1_data_E),
