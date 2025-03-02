@@ -1,7 +1,6 @@
 module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALUControlD, ALUSrcAD, ALUSrcBD, ImmSrcD);
     input  logic [31:0] InstrD;
     output logic        RegWriteD;
-    // output logic        fp_RegWriteD;                   //floating-point regfile write enable.
     output logic [1:0]  ResultSrcD;
     output logic        MemWriteD;
     output logic        JumpD;
@@ -76,7 +75,6 @@ module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALU
                             3'b101 : ALUControlD = SRA ;
                         endcase
                     end
-                    //TODO: Add the support for FPU here.
                 endcase
             end
             7'b0010011 : begin              //I-type instruction --- Without loads.
