@@ -1,4 +1,4 @@
-module decode(clk, rst_n, InstrD, PCD, PCPlus4D, rd_wdata, reg_we, RdW, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALUControlD, ALUSrcAD, ALUSrcBD, rs1_regD, rs2_regD, rs1_data, rs2_data, PCD_out, immExtD, PCPlus4D_out, RdD);
+module decode(clk, rst_n, InstrD, PCD, PCPlus4D, rd_wdata, reg_we, RdW, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALUControlD, ALUSrcAD, ALUSrcBD, rs1_regD, rs2_regD, rs1_data, rs2_data, PCD_out, immExtD, PCPlus4D_out, RdD, FPU_fp_we, decoder_fp_we, fp_wdata, fp_rs1_data, fp_rs2_data, fp_rs3_data, StartF, fp_operation);
     input  logic         clk;
     input  logic         rst_n;
     input  logic [31: 0] InstrD ;
@@ -24,15 +24,28 @@ module decode(clk, rst_n, InstrD, PCD, PCPlus4D, rd_wdata, reg_we, RdW, RegWrite
     output logic [31: 0] PCPlus4D_out;
     output logic [4:0]   RdD;
 
+    //Floating Point Signals.
+    input  logic         FPU_fp_we;                             //FPU returns the signal to decoder's FP regfile to write.
+    output logic         decoder_fp_we;                         //Decoder's Controller sends a signal to FPU.
+    input  logic [31: 0] fp_wdata;                              //FPU sends the data to be written on FP regfile.
+    output logic [31: 0] fp_rs1_data, fp_rs2_data, fp_rs3_data; //Decoder sends the registers data to FPU to process.
+    output logic         StartF;                                //Decoder sends a signal to FPU to tell that start process.
+    output logic [ 3: 0] fp_operation;                          //Decoder's controller to FPU to decide the operation.
     //interim signals.
     logic [4:0]  rs1_reg;
     logic [4:0]  rs2_reg;
+    logic [4:0]  rs3_reg;
     logic [2:0]  ImmSrcD;
 
-    assign rs1_reg  = InstrD [19:15];
-    assign rs2_reg  = InstrD [24:20];
-    assign rs1_regD = InstrD [19:15];
-    assign rs2_regD = InstrD [24:20];
+    assign rs1_reg  = InstrD [19: 15];
+    assign rs2_reg  = InstrD [24: 20];
+    assign rs3_reg  = InstrD [31: 27];
+    assign rs1_regD = InstrD [19: 15];
+    assign rs2_regD = InstrD [24: 20];
+
+    //FPU interim signal.
+    logic [ 4: 0] fp_rd_reg;
+    assign fp_rd_reg = InstrD[11:7];
 
     //Rd assignment
     assign RdD = InstrD [11:7];
@@ -51,7 +64,10 @@ module decode(clk, rst_n, InstrD, PCD, PCPlus4D, rd_wdata, reg_we, RdW, RegWrite
         .ALUControlD(ALUControlD),
         .ALUSrcAD(ALUSrcAD),
         .ALUSrcBD(ALUSrcBD),
-        .ImmSrcD(ImmSrcD)
+        .ImmSrcD(ImmSrcD),
+        .fp_we(decoder_fp_we),
+        .StartF(StartF),
+        .fp_operation(fp_operation)
     );
 
     regfile rf (
@@ -66,17 +82,19 @@ module decode(clk, rst_n, InstrD, PCD, PCPlus4D, rd_wdata, reg_we, RdW, RegWrite
         .rs2_data(rs2_data)
     );
 
-    // fp_regfile floating_point_rf(
-    //     .clk(clk),
-    //     .rst_n(rst_n),
-    //     .rs1_addr(rs1_reg),
-    //     .rs1_data(rs1_data),
-    //     .rs2_addr(),
-    //     .rs2_data(),
-    //     .write_en(),
-    //     .rd_addr(),
-    //     .rd_data()
-    // );
+    regfile_fp FP_RegisterFile(
+        .clk(clk),
+        .rst_n(rst_n),
+        .fp_we(FPU_fp_we),
+        .rs1_reg(rs1_reg),
+        .rs2_reg(rs2_reg),
+        .rs3_reg(rs3_reg),
+        .rd_reg(fp_rd_reg),
+        .fp_wdata(fp_wdata),
+        .rs1_data(fp_rs1_data),
+        .rs2_data(fp_rs2_data),
+        .rs3_data(fp_rs3_data)
+    );
 
     imm_gen sign_extender (
         .instr(InstrD),

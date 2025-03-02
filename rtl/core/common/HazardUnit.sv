@@ -1,4 +1,4 @@
-module HazardUnit( rs1E, rs2E, rdM, rdW, RegWriteM, RegWriteW, ResultSrcE, Rs1D, Rs2D, RdE, PCSrcE, JumpD,
+module HazardUnit( rs1E, rs2E, rdM, rdW, RegWriteM, RegWriteW, ResultSrcE, Rs1D, Rs2D, RdE, PCSrcE, JumpD, BusyF, DoneF,
                     ForwardAE, ForwardBE, StallF, StallD, FlushD, FlushE);
 
     //Forwarding logic signals.
@@ -16,6 +16,9 @@ module HazardUnit( rs1E, rs2E, rdM, rdW, RegWriteM, RegWriteW, ResultSrcE, Rs1D,
     input  logic PCSrcE;
     output logic FlushD;
     input  logic JumpD;
+
+    //Floating point instruction logic signals.
+    input  logic BusyF, DoneF;
 
     //Forwarding Logic.
     always_comb begin
@@ -42,32 +45,9 @@ module HazardUnit( rs1E, rs2E, rdM, rdW, RegWriteM, RegWriteW, ResultSrcE, Rs1D,
         end
     end
 
-    //Stall and Flush Logic for Load and Control instructions.
-    always_comb begin
-        if (PCSrcE) begin
-            FlushE = 1;
-        end
-        else begin
-            if (((ResultSrcE) && ((Rs1D == RdE) | (Rs2D == RdE)))) begin
-                StallD = 1;
-                StallF = 1;
-                FlushE = 1;
-            end
-            else begin
-                StallD = 0;
-                StallF = 0;
-                FlushE = 0;
-            end
-        end
-    end
-
-    always_comb begin
-        if (PCSrcE | JumpD) begin
-            FlushD = 1;
-        end
-        else begin
-            FlushD = 0;
-        end
-    end
+    assign StallF = ((ResultSrcE && ((Rs1D == RdE) || (Rs2D == RdE))) || BusyF);
+    assign StallD = ((ResultSrcE && ((Rs1D == RdE) || (Rs2D == RdE))) || BusyF);
+    assign FlushE = PCSrcE || (ResultSrcE && ((Rs1D == RdE) || (Rs2D == RdE)));
+    assign FlushD = PCSrcE || JumpD;
 
 endmodule

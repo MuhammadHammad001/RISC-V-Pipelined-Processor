@@ -10,7 +10,7 @@ module ff(clk, rst_n, Stall, inp, out);
             out <= 32'h0;
         end
         else if (Stall) begin
-            out <= inp;
+            out <= out;
         end
         else begin
             out <= inp;
