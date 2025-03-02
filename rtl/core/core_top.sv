@@ -37,6 +37,10 @@ module PipelinedProcessor(clk, rst_n);
     logic         RegWriteW_out;                                                //WriteBack Stage Signals.
     logic [ 1: 0] ForwardAE, ForwardBE;                                         //Forwarding Signals.
     logic         StallF, StallD, FlushD, FlushE;                               //Stall, Flush Signals.
+    logic         StartF, BusyF, DoneF;                                         //Stall, Flush signal input for FPU.
+    logic [31: 0] fp_rs1_data, fp_rs2_data, fp_rs3_data;                        //Floating Point Unit Signals.
+    logic [31: 0] fp_wdata;                                                     //Floating Point Unit Signals.
+    logic [ 3: 0] fp_operation;                                                 //Floating Point Unit Signals.
 
     fetch FetchStage(
         .clk(clk),
@@ -86,7 +90,15 @@ module PipelinedProcessor(clk, rst_n);
         .PCD_out(PCD_out),
         .immExtD(immExtD),
         .PCPlus4D_out(PCPlus4D_out),
-        .RdD(RdD)
+        .RdD(RdD),
+        .FPU_fp_we(FPU_fp_we),
+        .decoder_fp_we(decoder_fp_we),
+        .fp_wdata(fp_wdata),
+        .fp_rs1_data(fp_rs1_data),
+        .fp_rs2_data(fp_rs2_data),
+        .fp_rs3_data(fp_rs3_data),
+        .StartF(StartF),
+        .fp_operation(fp_operation)
     );
 
     RegisterDE  DecodeExecuteStage(
@@ -250,12 +262,29 @@ module PipelinedProcessor(clk, rst_n);
         .RdE(RdE),
         .PCSrcE(PCSrcE),
         .JumpD(JumpD),
+        .BusyF(BusyF),
+        .DoneF(DoneF),
         .ForwardAE(ForwardAE),
         .ForwardBE(ForwardBE),
         .StallF(StallF),
         .StallD(StallD),
         .FlushD(FlushD),
         .FlushE(FlushE)
+    );
+
+    fpu Floating_Point_Unit(
+        .clk(clk),
+        .rst_n(rst_n),
+        .decoder_fp_we(decoder_fp_we),
+        .inp1(fp_rs1_data),
+        .inp2(fp_rs2_data),
+        .inp3(fp_rs3_data),
+        .opcode(fp_operation),
+        .StartF(StartF),
+        .BusyF(BusyF),
+        .DoneF(DoneF),
+        .out(fp_wdata),
+        .FPU_fp_we(FPU_fp_we)
     );
 
 endmodule

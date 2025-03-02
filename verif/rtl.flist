@@ -23,3 +23,7 @@
 
 #HazardUnit
 /home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/HazardUnit.sv
+#Floating Point Unit
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/fpu.sv
+#FP-register_file
+/home/hammad/Tools/VCS/workspace/workspace/RISC-V-Pipelined-Processor/rtl/core/common/fp_regfile.sv

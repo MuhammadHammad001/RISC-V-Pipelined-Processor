@@ -1,7 +1,6 @@
-module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALUControlD, ALUSrcAD, ALUSrcBD, ImmSrcD);
+module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALUControlD, ALUSrcAD, ALUSrcBD, ImmSrcD, fp_we, StartF, fp_operation);
     input  logic [31:0] InstrD;
     output logic        RegWriteD;
-    // output logic        fp_RegWriteD;                   //floating-point regfile write enable.
     output logic [1:0]  ResultSrcD;
     output logic        MemWriteD;
     output logic        JumpD;
@@ -10,6 +9,9 @@ module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALU
     output logic        ALUSrcAD;
     output logic        ALUSrcBD;
     output logic [2:0]  ImmSrcD;
+    output logic        fp_we;                   //floating-point regfile write enable.
+    output logic        StartF;
+    output logic [3:0]  fp_operation;
 
     //Opcodes for Integer-type instructions
     parameter [3:0] ADD  = 4'b0000;
@@ -25,16 +27,33 @@ module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALU
     parameter [3:0] LUI  = 4'b1010;
     parameter [3:0] JAL  = 4'b1011;
 
-    //TODO: Add the opcodes for floating point here.
-
     //decode logic
     logic [6:0] func7;
     logic [6:0] opcode;
     logic [2:0] func3;
 
+    //TODO: Add the opcodes for floating point here.
+    parameter [3:0] FPU_FADD_S   = 4'b0000;
+    parameter [3:0] FPU_FSUB_S   = 4'b0001;
+    parameter [3:0] FPU_FMUL_S   = 4'b0010;
+    parameter [3:0] FPU_FDIV_S   = 4'b0011;
+    parameter [3:0] FPU_FSQRT_S  = 4'b0100;
+    parameter [3:0] FPU_FSGNJ_S  = 4'b0101;
+    parameter [3:0] FPU_FSGNJN_S = 4'b0110;
+    parameter [3:0] FPU_FSGNJX_S = 4'b0111;
+    parameter [3:0] FPU_FMIN_S   = 4'b1000;
+    parameter [3:0] FPU_FMAX_S   = 4'b1001;
+
     assign opcode = InstrD [6:0];
     assign func3  = InstrD [14:12];
     assign func7  = InstrD [31:25];
+
+    //Floating Point
+    assign func7_upper = InstrD[31:27];
+
+    //Direct assignment
+    assign fmt = InstrD[26:25];
+    assign rm  = InstrD[14:12];
 
     always_comb begin
         // Default assignments to prevent x (unknown values)
@@ -47,6 +66,8 @@ module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALU
         ALUSrcAD     = 1'b0;
         ALUSrcBD     = 1'b0;
         ImmSrcD     = 3'b000;
+        StartF      = 1'b0;
+        fp_we       = 1'h0;
         case (opcode)
             7'b0110011 : begin            //R-type instruction.
                 RegWriteD   = 1'b1  ;               //write to the register file
@@ -76,7 +97,6 @@ module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALU
                             3'b101 : ALUControlD = SRA ;
                         endcase
                     end
-                    //TODO: Add the support for FPU here.
                 endcase
             end
             7'b0010011 : begin              //I-type instruction --- Without loads.
@@ -177,6 +197,30 @@ module controlunit(InstrD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALU
                 ALUControlD = JAL ;
             end
 
+            7'b1010011 : begin              //Floating Point - R-type.
+                StartF = 1'h1;              //Start FPU.
+                fp_we = 1'h1;        //Write the result in the floating point register.
+                case (func7_upper)
+                    5'b00000 : fp_operation = FPU_FADD_S;
+                    5'b00001 : fp_operation = FPU_FSUB_S;
+                    5'b00010 : fp_operation = FPU_FMUL_S;
+                    5'b00011 : fp_operation = FPU_FDIV_S;
+                    5'b01011 : fp_operation = FPU_FSQRT_S;
+                    5'b00100 : begin
+                        case (func3)
+                            3'b000 : fp_operation = FPU_FSGNJ_S;
+                            3'b001 : fp_operation = FPU_FSGNJN_S;
+                            3'b010 : fp_operation = FPU_FSGNJX_S;
+                        endcase
+                    end
+                    5'b00101:  begin
+                        case (func3)
+                            3'b000 : fp_operation = FPU_FMIN_S;
+                            3'b001 : fp_operation = FPU_FMAX_S;
+                        endcase
+                    end
+                endcase
+            end
     endcase
     end
 endmodule
